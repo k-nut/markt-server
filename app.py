@@ -36,8 +36,14 @@ def filter_by(features, day, time):
 
 
 @app.route('/routes')
-def routes():
-    routes = {"routes": {"open_at": { "params": ["day", "time", "city"]}}}
+def get_routes():
+    routes = {"routes":
+                {"open_at":
+                    {"params": ["day", "time", "city"]},
+                 "routes":
+                    {"params": []}
+                }
+             }
     return jsonify(routes)
 
 @app.route('/open_at')
