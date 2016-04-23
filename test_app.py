@@ -45,6 +45,15 @@ class FlaskrTestCase(unittest.TestCase):
         self.app = app.app.test_client()
         app.app.config['TESTING'] = True
 
+    def test_routes_shows_available_routes(self):
+        rv = self.app.get('/routes')
+        assert rv.status_code == 200
+        response = json.loads(rv.data)
+        assert "open_at" in response["routes"]
+        assert "city" in response["routes"]["open_at"]["params"]
+        assert "time" in response["routes"]["open_at"]["params"]
+        assert "day" in response["routes"]["open_at"]["params"]
+
     @patch("app.get_cities", return_value=["berlin"])
     def test_city_does_not_exist(self, mock_get_cities):
         rv = self.app.get('/open_at?city=Hamburg')

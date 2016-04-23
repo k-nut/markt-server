@@ -34,6 +34,12 @@ def filter_by(features, day, time):
             filtered.append(city)
     return filtered
 
+
+@app.route('/routes')
+def routes():
+    routes = {"routes": {"open_at": { "params": ["day", "time", "city"]}}}
+    return jsonify(routes)
+
 @app.route('/open_at')
 def open_at():
     cities = get_cities()
