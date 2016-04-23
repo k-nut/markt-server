@@ -1,67 +1,38 @@
 #/usr/bin/env python3
-import os
+""" The main app. It contains all the routes """
 import json
 
 from flask import Flask, request, jsonify
 
-from osm_time.opening_hours import OpeningHours
+import controller
 
-app = Flask(__name__)
-
-
-def get_cities():
-    filenames = [f for f in os.listdir("./data") if os.path.isfile(os.path.join("./data", f))]
-    cities = [filename.split(".")[0] for filename in filenames]
-    return cities
-
-
-def get_data_for(city):
-    filename = "%s.json" % city.lower()
-    path = os.path.join("./data", filename)
-    with open(path) as infile:
-        data = json.load(infile)
-        return data
-
-
-def filter_by(features, day, time):
-    filtered = []
-    for city in features:
-        opening_hours = city["properties"].get("opening_hours")
-        if opening_hours is None:
-            continue
-        openings = OpeningHours(opening_hours)
-        if openings.is_open(day, time):
-            filtered.append(city)
-    return filtered
-
+app = Flask(__name__)  # pylint: disable=invalid-name
 
 @app.route('/routes')
 def get_routes():
-    routes = {"routes":
-                {"open_at":
-                    {"params": ["day", "time", "city"]},
-                 "routes":
-                    {"params": []}
-                }
-             }
-    return jsonify(routes)
+    """ Returns a list of api endpoints """
+    return controller.get_routes()
 
 @app.route('/open_at')
 def open_at():
-    cities = get_cities()
+    """ Returns a geojson representation of markets that are open at
+        the given date and time for the given city """
+    cities = controller.get_cities()
     city = request.args.get('city', None)
     if (city is None) or (city.lower() not in cities):
         return json.dumps({"message": "city %s not found" % city}), 404
     else:
-        data = get_data_for(city)
+        data = controller.get_data_for(city)
 
     day = request.args.get("day", None)
     time = request.args.get("time", None)
 
     if day is not None and time is not None:
-        if day not in ["mo", "tu", "we", "th", "fr", "sa", "su"]:
-            return json.dumps({"message":"Parameter day must be one of [mo, tu, we, th, fr, sa, su]"}), 400
-        data["features"] = filter_by(data["features"], day, time)
+        days = ["mo", "tu", "we", "th", "fr", "sa", "su"]
+        if day not in days:
+            message = "Parameter day must be one of " + str(days)
+            return json.dumps({"message": message}), 400
+        data["features"] = controller.filter_by(data["features"], day, time)
 
     return jsonify(data)
 
