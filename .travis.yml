@@ -6,9 +6,12 @@ before_install:
   -in deploy_key.enc -out deploy_key -d
 install:
 - pip install -r requirements.txt
+- pip install coveralls
 script:
-- py.test
+- coverage run --source=. py.test
 - fab deploy -i deploy_key -H $host
+after_success:
+- coveralls
 branches:
   only:
     - master
