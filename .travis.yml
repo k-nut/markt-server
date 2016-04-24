@@ -7,8 +7,9 @@ before_install:
 install:
 - pip install -r requirements.txt
 - pip install coveralls
+- pip install pytest-cov
 script:
-- coverage run --source=. py.test
+- py.test --cov .
 - fab deploy -i deploy_key -H $host
 after_success:
 - coveralls
