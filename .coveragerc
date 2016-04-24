@@ -1,0 +1,2 @@
+[run]
+omit = osm_time/*, fabfile.py

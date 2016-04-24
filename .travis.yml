@@ -9,7 +9,7 @@ install:
 - pip install coveralls
 - pip install pytest-cov
 script:
-- py.test --cov .
+  - py.test --cov . --cov-config .coveragerc
 - fab deploy -i deploy_key -H $host
 after_success:
 - coveralls
