@@ -1,4 +1,4 @@
-# markt-server ![build_staus](https://travis-ci.org/k-nut/markt-server.svg)
+# markt-server ![build_staus](https://travis-ci.org/k-nut/markt-server.svg) [![Coverage Status](https://coveralls.io/repos/github/k-nut/markt-server/badge.svg?branch=master)](https://coveralls.io/github/k-nut/markt-server?branch=master)
 
 Server for filtering data for wo-ist-markt.de by opening hours.
 
