@@ -1,4 +1,5 @@
 Fabric==1.11.1
 Flask==0.10.1
 mock==2.0.0
+osm_opening_hours==0.1.1
 pytest==2.9.1
